@@ -9,7 +9,7 @@ const formats = ['space-delimited', 'json'] as const
 /**
  * action.ymlで定義されるinputs.formatの一覧
  */
-type Format = typeof formats[number]
+type Format = (typeof formats)[number]
 
 /**
  * 入力値がFormat型の範囲であるかどうかを返します。
@@ -57,7 +57,14 @@ class ActionOutput {
   private readonly removed: string[]
   private readonly renamed: string[]
 
-  constructor(all: string[], added: string[], modified: string[], addedModified: string[], removed: string[], renamed: string[]) {
+  constructor(
+    all: string[],
+    added: string[],
+    modified: string[],
+    addedModified: string[],
+    removed: string[],
+    renamed: string[]
+  ) {
     this.all = all
     this.added = added
     this.modified = modified
@@ -90,7 +97,9 @@ class ActionOutput {
     switch (format) {
       case 'space-delimited':
         if (values.some(v => v.includes(' '))) {
-          throw new Error(`space-delimited format can't encode white space included file name`)
+          throw new Error(
+            `space-delimited format can't encode white space included file name`
+          )
         }
         return values.join(' ')
       case 'json':
@@ -126,7 +135,7 @@ class CommitHashes {
       case 'pull_request':
         return new CommitHashes(
           github.context.payload.pull_request?.base?.sha1,
-          github.context.payload.pull_request?.head?.sha1,
+          github.context.payload.pull_request?.head?.sha1
         )
       case 'push':
         return new CommitHashes(
@@ -166,11 +175,14 @@ export async function runAsync(): Promise<void> {
     throw new Error(`not supported status ${response.data.status}`)
   }
   if (response.data.files === undefined) {
-    throw new Error(`undefined response from compareCommitsWithBasehead`);
+    throw new Error(`undefined response from compareCommitsWithBasehead`)
   }
 
   const filename = (file: any) => file.filename
-  const only = (...status: string[]) => (file: any) => status.some(s => file.status === s)
+  const only =
+    (...status: string[]) =>
+    (file: any) =>
+      status.some(s => file.status === s)
 
   const files = response.data.files
   const output = new ActionOutput(
