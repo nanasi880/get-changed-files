@@ -1,7 +1,10 @@
-/**
- * The entrypoint for the action.
- */
-import { run } from './main'
+import * as core from '@actions/core'
+import { runAsync } from './main'
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-run()
+runAsync().catch(error => {
+  if (error instanceof Error) {
+    core.setFailed(error)
+  } else {
+    core.setFailed(String(error))
+  }
+})

@@ -1,23 +1,34 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'get-changed-files'
+description: ''
+author: 'nanasi880'
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'file-plus'
+  color: 'orange'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  token:
     required: true
-    default: '1000'
+    default: ${{ github.token }}
+    description: Github Token
+  format:
+    required: true
+    default: 'space-delimited'
+    description: "'space-delimited' or 'json'"
 
-# Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  all:
+    description: "all changed files"
+  added:
+    description: 'added files'
+  modified:
+    description: 'modified files'
+  added_modified:
+    description: 'added or modified files'
+  removed:
+    description: 'removed files'
+  renamed:
+    description: 'renamed files'
 
 runs:
   using: node20
